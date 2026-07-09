@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NetNOC - Monitoramento de Rede</title>
+<link rel="stylesheet" href="style.css">
+<script src="chart.umd.js"></script>
+<script src="icons.js"></script>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand">🛰 NetNOC</div>
+    <nav>
+      <a href="#" data-page="overview" class="active">Visão Geral</a>
+      <a href="#" data-page="config">Configurações</a>
+    </nav>
+    <button id="clearHistoryBtn" class="danger-btn">🗑 Limpar Histórico</button>
+    <div class="sys-panel">
+      <div class="sys-title">Sistema</div>
+      <div class="sys-row"><span>CPU</span><span id="sysCpu">--%</span></div>
+      <div class="bar"><div id="barCpu" class="bar-fill cpu"></div></div>
+      <div class="sys-row"><span>Memória</span><span id="sysMem">--%</span></div>
+      <div class="bar"><div id="barMem" class="bar-fill mem"></div></div>
+      <div class="sys-row"><span>Temperatura</span><span id="sysTemp">--°C</span></div>
+      <div class="bar"><div id="barTemp" class="bar-fill temp"></div></div>
+    </div>
+  </aside>
+
+  <main class="content">
+    <header class="topbar">
+      <div>
+        <h1>Visão Geral</h1>
+        <p>Monitoramento em tempo real da sua rede</p>
+      </div>
+      <select id="rangeSelect">
+        <option value="5m">Últimos 5 minutos</option>
+        <option value="1h">Última 1 hora</option>
+        <option value="24h">Últimas 24 horas</option>
+        <option value="7d">Últimos 7 dias</option>
+        <option value="30d">Últimos 30 dias</option>
+      </select>
+      <select id="themeSelect">
+        <option value="dark-blue">Tema Azul Escuro</option>
+        <option value="dark-green">Tema Verde Escuro</option>
+        <option value="dark-purple">Tema Roxo Escuro</option>
+        <option value="midnight-oled">Tema Preto OLED</option>
+        <option value="light">Tema Claro</option>
+      </select>
+    </header>
+
+    <div id="incidentBanner" class="incident-banner hidden"></div>
+
+    <div class="page active" data-page="overview">
+    <section class="cards">
+      <div class="card">
+        <div class="card-label"><span id="dotInternet" class="dot"></span>Status da Internet</div>
+        <div class="card-value" id="internetStatus">--</div>
+      </div>
+      <div class="card">
+        <div class="card-label">🌐 IP Público</div>
+        <div class="card-value small" id="publicIp">--</div>
+        <div class="card-sub" id="publicIpv6">--</div>
+      </div>
+      <div class="card">
+        <div class="card-label">📈 Latência Média</div>
+        <div class="card-value" id="avgLatency">-- ms</div>
+      </div>
+      <div class="card">
+        <div class="card-label">📉 Jitter Médio</div>
+        <div class="card-value" id="avgJitter">-- ms</div>
+      </div>
+      <div class="card">
+        <div class="card-label">📦 Perda de Pacotes</div>
+        <div class="card-value" id="avgLoss">-- %</div>
+      </div>
+      <div class="card">
+        <div class="card-label">⚡ Velocidade</div>
+        <div class="card-value small" id="speedDown">-- Mbps ↓</div>
+        <div class="card-sub" id="speedUp">-- Mbps ↑</div>
+      </div>
+    </section>
+
+    <div id="widgetsGrid" class="widgets-grid">
+
+      <div class="widget widget-wide" data-widget="chart-ping" draggable="true">
+        <div class="panel-header drag-handle"><span>⠿ Ping</span></div>
+        <canvas id="pingChart" height="90"></canvas>
+      </div>
+
+      <div class="widget widget-wide" data-widget="chart-jitter" draggable="true">
+        <div class="panel-header drag-handle"><span>⠿ Jitter</span></div>
+        <canvas id="jitterChart" height="90"></canvas>
+      </div>
+
+      <div class="widget widget-wide" data-widget="chart-loss" draggable="true">
+        <div class="panel-header drag-handle"><span>⠿ Perda de Pacotes</span></div>
+        <canvas id="lossChart" height="90"></canvas>
+      </div>
+
+      <div class="widget widget-full" data-widget="targets" draggable="true">
+        <div class="panel-header drag-handle"><span>⠿ Monitor de Destinos</span></div>
+        <table class="data-table">
+          <thead><tr><th>Destino</th><th>IP</th><th>Status</th><th>Ping</th><th>Jitter</th><th>Perda</th><th>Uptime 24h</th></tr></thead>
+          <tbody id="targetsBody"></tbody>
+        </table>
+      </div>
+
+      <div class="widget widget-full" data-widget="speedtest" draggable="true">
+        <div class="panel-header drag-handle">
+          <span>⠿ Teste de Velocidade</span>
+          <button id="runSpeedtest">Executar Teste</button>
+        </div>
+        <div class="speed-values">
+          <div><span id="speedDownBig">--</span><label>Mbps Download</label></div>
+          <div><span id="speedUpBig">--</span><label>Mbps Upload</label></div>
+          <div><span id="speedLatBig">--</span><label>ms Latência</label></div>
+        </div>
+      </div>
+
+      <div class="widget" data-widget="dns" draggable="true">
+        <div class="panel-header drag-handle"><span>⠿ DNS - Tempo de Resposta</span></div>
+        <div id="dnsList" class="dns-list"></div>
+      </div>
+
+      <div class="widget" data-widget="insights" draggable="true">
+        <div class="panel-header drag-handle"><span>⠿ Padrões Detectados</span></div>
+        <div id="insightsList" class="insights-list"></div>
+      </div>
+
+      <div class="widget widget-wide" data-widget="availability" draggable="true">
+        <div class="panel-header drag-handle"><span>⠿ Disponibilidade (24h)</span></div>
+        <div id="availabilityList" class="availability-list"></div>
+      </div>
+
+      <div class="widget" data-widget="events" draggable="true">
+        <div class="panel-header drag-handle"><span>⠿ Timeline de Eventos</span></div>
+        <div id="eventsList" class="events-list"></div>
+      </div>
+
+      <div class="widget" data-widget="incidents" draggable="true">
+        <div class="panel-header drag-handle"><span>⠿ Incidentes Ativos <span id="incidentCount" class="badge">0</span></span></div>
+        <div id="incidentsList" class="incidents-list"></div>
+      </div>
+
+      <div class="widget" data-widget="summary" draggable="true">
+        <div class="panel-header drag-handle"><span>⠿ Resumo de Incidentes (7 dias)</span></div>
+        <canvas id="incidentsDonut" height="160"></canvas>
+      </div>
+
+    </div>
+    </div>
+    <button id="resetLayoutBtn" class="reset-layout-btn hidden">↺ Restaurar organização padrão</button>
+
+    <div class="page" data-page="config">
+    <section id="settings" class="mid-row two-col">
+      <div class="panel">
+        <div class="panel-header"><span>Destinos (Ping)</span></div>
+        <form id="formTarget" class="settings-form">
+          <input name="name" placeholder="Nome" required>
+          <input name="host" placeholder="IP ou host" required>
+          <button type="submit">Adicionar</button>
+        </form>
+        <div id="listTargets" class="settings-list"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><span>Servidores DNS</span></div>
+        <form id="formDns" class="settings-form">
+          <input name="name" placeholder="Nome" required>
+          <input name="ip" placeholder="IP do servidor" required>
+          <button type="submit">Adicionar</button>
+        </form>
+        <div id="listDns" class="settings-list"></div>
+      </div>
+    </section>
+
+    <section class="mid-row two-col">
+      <div class="panel">
+        <div class="panel-header"><span>Intervalos de Coleta (segundos)</span></div>
+        <form id="formIntervals" class="settings-form" style="flex-direction:column;align-items:stretch;">
+          <label class="interval-row">Ping <input name="ping_interval_seconds" type="number" min="1" required></label>
+          <label class="interval-row">DNS <input name="dns_check_interval_seconds" type="number" min="5" required></label>
+          <label class="interval-row">IP Público <input name="public_ip_interval_seconds" type="number" min="30" required></label>
+          <label class="interval-row">Sistema (CPU/Mem/Temp) <input name="system_interval_seconds" type="number" min="1" required></label>
+          <button type="submit">Salvar Intervalos</button>
+        </form>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><span>Alertas Telegram</span></div>
+        <form id="formTelegram" class="settings-form" style="flex-direction:column;align-items:stretch;">
+          <label class="interval-row">Ativado <input name="enabled" type="checkbox"></label>
+          <input name="bot_token" placeholder="Bot Token">
+          <input name="chat_id" placeholder="Chat ID">
+          <select name="min_severity">
+            <option value="Alta">Só severidade Alta</option>
+            <option value="Media">Média ou maior</option>
+            <option value="Baixa">Baixa ou maior</option>
+            <option value="Info">Tudo (inclusive Info)</option>
+          </select>
+          <div style="display:flex;gap:8px;">
+            <button type="submit">Salvar</button>
+            <button type="button" id="testTelegramBtn">Enviar Teste</button>
+          </div>
+        </form>
+      </div>
+    </section>
+    </div>
+  </main>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
