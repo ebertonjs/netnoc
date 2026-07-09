@@ -7,6 +7,7 @@ Dashboard de monitoramento de rede em tempo real, feito para rodar em um Raspber
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 ---
+<img width="1903" height="921" alt="Sem título" src="https://github.com/user-attachments/assets/26365972-0157-4634-a1b1-b42677d0f40c" />
 
 ## ✨ Funcionalidades
 
