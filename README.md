@@ -37,7 +37,7 @@ Dashboard de monitoramento de rede em tempo real, feito para rodar em um Raspber
 ## 🚀 Instalação
 
 ```bash
-git clone https://github.com/SEU_USUARIO/netnoc.git
+git clone https://github.com/ebertonjs/netnoc.git
 cd netnoc
 chmod +x install.sh
 ./install.sh
