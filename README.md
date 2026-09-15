@@ -6,8 +6,10 @@ Dashboard de monitoramento de rede em tempo real, feito para rodar em um Raspber
 ![FastAPI](https://img.shields.io/badge/FastAPI-backend-009688)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
+
+<img width="1794" height="1713" alt="Captura de tela_14-9-2026_225054_10 10 10 5" src="https://github.com/user-attachments/assets/a92ad3a2-e1a4-4750-b9dd-f79ddfe65741" />
+
 ---
-<img width="1895" height="906" alt="Captura de tela 2026-07-09 235026" src="https://github.com/user-attachments/assets/7db5add4-7fbd-4db5-9de3-e83e63b92434" />
 
 ## ✨ Funcionalidades
 
