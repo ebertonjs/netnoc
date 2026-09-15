@@ -1,4 +1,4 @@
-# 🛰️ NetNOC
+# 🛰️ Netlab
 
 Dashboard de monitoramento de rede em tempo real, feito para rodar em um Raspberry Pi (ou qualquer Linux) com consumo baixo de CPU/RAM. Interface inspirada em ferramentas de NOC (Grafana/UniFi/Zabbix), 100% self-hosted, sem depender de serviços externos além dos alvos que você monitora.
 
@@ -8,6 +8,9 @@ Dashboard de monitoramento de rede em tempo real, feito para rodar em um Raspber
 
 
 <img width="1794" height="1713" alt="Captura de tela_14-9-2026_225054_10 10 10 5" src="https://github.com/user-attachments/assets/a92ad3a2-e1a4-4750-b9dd-f79ddfe65741" />
+<img width="1726" height="900" alt="image" src="https://github.com/user-attachments/assets/b2133bd6-acce-4c08-9c5c-d238f265cbb0" />
+<img width="1705" height="450" alt="image" src="https://github.com/user-attachments/assets/9a7b7e05-9797-49e7-9565-0c1e8c2a68c4" />
+
 
 ---
 
